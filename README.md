@@ -22,7 +22,9 @@ That being said, Korgi assumes that all these mentioned entities are present acr
 
 The following diagram illustrates the logical chart organization of a fictitious Kubernetes project.
 
-![app-organization](doc/img/app_organization.png)
+<p align="center">
+  <img src="doc/img/app_organization.png">
+</p>
 
 The organization into namespaces, app groups and apps implemented inside this repository, is illustrated by the following tree view.
 ```
