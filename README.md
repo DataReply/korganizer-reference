@@ -27,6 +27,7 @@ The following diagram illustrates the logical chart organization of a fictitious
 </p>
 
 The organization into namespaces, app groups and apps implemented inside this repository, is illustrated by the following tree view.
+
 ```
 ├── _defaults.yaml
 ├── layer-base (namespace)
@@ -75,10 +76,9 @@ Release values can be specified at different levels/layers
 12. release defaults specified alongside the release in the app file
 
 
-The tree view of values specified inside this reference prohect is given by:
+The tree view of values specified inside this reference project is given by:
 
 ```
-.
 ├── defaults
 │   ├── layer-base
 │   │   ├── monitoring
@@ -103,12 +103,8 @@ The tree view of values specified inside this reference prohect is given by:
 │   │   │   ├── grafana
 │   │   │   │   ├── dashboards
 │   │   │   │   │   ├── base
-│   │   │   │   │   │   ├── external-dns.json
-│   │   │   │   │   │   ├── keycloak.json
 │   │   │   │   │   │   ├── kube-state-metrics.json
-│   │   │   │   │   │   ├── loki.json
-│   │   │   │   │   │   ├── prometheus-alerts-overview.json
-│   │   │   │   │   │   └── rest-api-dashboard.json
+│   │   │   │   │   │   └── prometheus-alerts-overview.json
 │   │   │   │   │   └── gitlab-pipelines
 │   │   │   │   │       ├── gitlab-ci-deployments.json
 │   │   │   │   │       ├── gitlab-ci-jobs.json
@@ -119,60 +115,44 @@ The tree view of values specified inside this reference prohect is given by:
 │   │   │       ├── prometheus-base.yaml
 │   │   │       ├── prometheus-pushgateway.gotmpl
 │   │   │       ├── prometheus.gotmpl
-│   │   │       ├── thanos.gotmpl
 │   │   │       └── values.gotmpl
 │   │   └── values.yaml
 │   ├── secrets.yaml
+│   ├── secrets.yaml.dec
 │   ├── values.gotmpl
 │   └── values.yaml
 └── env
     ├── client-dev
     │   ├── layer-infra
-    │   │   ├── monitoring
-    │   │   │   ├── grafana
-    │   │   │   │   ├── grafana.yaml
-    │   │   │   │   └── secrets.yaml
-    │   │   │   └── prometheus
-    │   │   │       ├── prometheus-apps.yaml
-    │   │   │       ├── prometheus-base.yaml
-    │   │   │       ├── prometheus-data.yaml
-    │   │   │       ├── prometheus-infra.yaml
-    │   │   │       ├── prometheus-interfaces.yaml
-    │   │   │       ├── prometheus.yaml
-    │   │   │       └── thanos.yaml
-    │   │   └── values.yaml
-    │   ├── secrets.yaml
+    │   │   └── monitoring
+    │   │       ├── grafana
+    │   │       │   ├── grafana.yaml
+    │   │       │   ├── secrets.yaml
+    │   │       │   └── secrets.yaml.dec
+    │   │       └── prometheus
+    │   │           ├── prometheus-apps.yaml
+    │   │           ├── prometheus-base.yaml
+    │   │           ├── prometheus-data.yaml
+    │   │           ├── prometheus-infra.yaml
+    │   │           ├── prometheus-interfaces.yaml
+    │   │           └── prometheus.yaml
     │   └── values.yaml
     ├── client-prod
     │   ├── layer-infra
-    │   │   ├── monitoring
-    │   │   │   ├── exporter
-    │   │   │   │   ├── pipelines-exporter.gotmpl
-    │   │   │   │   ├── pipelines-exporter.secrets.yaml
-    │   │   │   │   └── values.yaml
-    │   │   │   ├── grafana
-    │   │   │   │   ├── grafana.yaml
-    │   │   │   │   ├── secrets.yaml
-    │   │   │   │   └── secrets.yaml.dec
-    │   │   │   └── prometheus
-    │   │   │       ├── prometheus-apps.yaml
-    │   │   │       ├── prometheus-base.yaml
-    │   │   │       ├── prometheus-data.yaml
-    │   │   │       ├── prometheus-infra.yaml
-    │   │   │       ├── prometheus-interfaces.yaml
-    │   │   │       ├── prometheus.yaml
-    │   │   │       └── thanos.yaml
-    │   │   └── values.yaml
-    │   ├── secrets.yaml
-    │   ├── values.gotmpl
+    │   │   └── monitoring
+    │   │       ├── exporter
+    │   │       │   └── values.yaml
+    │   │       ├── grafana
+    │   │       │   ├── grafana.yaml
+    │   │       │   ├── secrets.yaml
+    │   │       │   └── secrets.yaml.dec
+    │   │       └── prometheus
+    │   │           ├── prometheus-data.yaml
+    │   │           ├── prometheus-infra.yaml
+    │   │           └── prometheus.yaml
     │   └── values.yaml
     └── migration-dev
-        ├── layer-base
-        │   └── monitoring
-        │       └── exporters
-        ├── values.gotmpl
         └── values.yaml
-
 ```
 
 ### Test this repository
