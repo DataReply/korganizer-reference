@@ -1,4 +1,4 @@
-## Korgi - Configuration Management amd Chart Organization Framework
+## Korgi - Configuration Management and Chart Organization Framework
 
 <p align="center">
   <img src="https://emojis.slackmojis.com/emojis/images/1488330086/1793/party-corgi.gif?1488330086">
@@ -13,7 +13,7 @@ This repository illustrates the chart organization framework used in [Korgi](htt
 - ability to use templating in release value definitions
 - Support for local plus remote helm charts and arbitrary kubernetes config resources
 
-### Namespaces, App Groups, Apps and Releases
+### Entities - Namespaces, App Groups, Apps and Releases
 
 Korgi organizes charts and their respective installations inside `realm/namespaces`. 
 Namespaces are composed of app groups which in turn contain multiple apps. Apps are represented by app files and reference one or many release definitions.
