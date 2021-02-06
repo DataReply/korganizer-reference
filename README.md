@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://emojis.slackmojis.com/emojis/images/1488330086/1793/party-corgi.gif?1488330086">
    </br>
-   Korgi helps you organize your releases and their configurations like a good boi
+   Korgi helps you organize your releases and their configs like a good boi
 </p>
 
 This repository illustrates the chart organization framework used in [Korgi](https://github.com/DataReply/korgi). It is based on [helmfile](https://github.com/roboll/helmfile) and implements the following concepts:
@@ -21,7 +21,7 @@ A release definition states the helm chart to install, while the installation in
 That being said, Korgi assumes that all these mentioned entities are present across environments and differences between environments will preferrably be configured inside the respective environment value directory.
 
 The following diagram illustrates the logical chart organization of a fictitious Kubernetes project.
- 
+
 ![app-organization](doc/img/app_organization.png)
 
 The organization into namespaces, app groups and apps implemented inside this repository, is illustrated by the following tree view.
