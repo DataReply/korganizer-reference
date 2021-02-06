@@ -1,0 +1,10 @@
+resources:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    namespace: {{.Values.namespace}}
+    annotations:
+        eks.amazonaws.com/role-arn: "arn:aws:iam::{{.Values.awsAccountId}}:role/{{.Values.awsCloudwatchExporterRoleName}}"
+    labels:
+      component: aws-cloudwatch-exporter
+    name: aws-cloudwatch-exporter

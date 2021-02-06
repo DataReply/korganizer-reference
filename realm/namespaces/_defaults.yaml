@@ -1,0 +1,88 @@
+repositories:
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+  - name: cilium
+    url: https://helm.cilium.io/
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  - name: incubator
+    url: https://charts.helm.sh/incubator
+  #- name: chart-artifactory
+  #  url: https://artifactory.company.com/hel,
+  - name: kyverno
+    url:  https://kyverno.github.io/kyverno/
+
+  - name: autoscaler
+    url: https://kubernetes.github.io/autoscaler
+values:
+  - dnsServer: 100.64.0.10
+  - enableHooks: false
+  - awsResourcePrefix: "company-department"
+  - IamRole: "default"
+  - defaultIngressClass: "ingress"
+  - ingressLayerName: "web"
+  - artifactorySecret: "artifactory-fetch-secret"
+  - artifactory: "docker.artifactory.company.com"
+  - namespacePrefix: "layer"
+  - awsRegion: "eu-central-1"
+  - artifactoryRepositories:
+      - "docker.artifactory.company.com"
+      - "quay-remote.artifactory.company.com"
+      - "zalando-remote.artifactory.company.com"
+      - "gcr.artifactory.company.com"
+      - "k8s-remote.artifactory.company.com"
+    
+  - dev: "client-dev"
+  - prod: "client-prod"
+  - eksDev: "migration-dev"
+
+  - imageVersion: "latest"
+  - storageClassDefault: "gp2-no-reclaim"
+  - istioAnnotations:
+      sidecar.istio.io/inject: "true"
+      sidecar.istio.io/proxyCPU: "10m"
+      sidecar.istio.io/proxyMemory: "256Mi"
+      sidecar.istio.io/proxyLimitCPU: "20m"
+      sidecar.istio.io/proxyLimitMemory: "512Mi"
+
+environments:
+  client-dev:
+    values:
+      - kubeContext: "client-dev-ctx"
+      - DataBucket: "dev-datahub-raw"
+      - IamRole: "arn:aws:iam::9392939492939:role/iam_role_name"
+      - OutputBucket: "dev-ci"
+      - ../../../values/env/client-dev/values.yaml
+
+    secrets:
+      - ../../../values/defaults/secrets.yaml
+      - ../../../values/env/client-dev/secrets.yaml
+
+  client-prod:
+    values:
+      - kubeContext: "client-prod-ctx"
+      - DataBucket: "prod-datahub-raw"
+      - OutputBucket: "prod-ci"
+      - IamRole: "arn:aws:iam::4344546654664564:role/iam_role_name"
+      - ../../../values/env/client-prod/values.yaml
+    secrets:
+      - ../../../values/defaults/secrets.yaml
+      - ../../../values/env/client-prod/secrets.yaml
+
+  migration-dev:
+    values:
+      - dnsServer: 172.20.0.10
+      - awsAccountId: "94943929492"
+      - kubeContext: "arn:aws:eks:eu-central-1:{{.Values.awsAccountId}}:cluster/migration-dev-ctx"
+      - artifactory: "545454542.dkr.ecr.eu-central-1.amazonaws.com"
+      - awsCertResourceId: "76b2361f-f802-4f21-925a-4934343"
+      - clusterName: "{{.Values.awsResourcePrefix}}-eks-dev"
+      - DataBucket: "{{.Values.awsResourcePrefix}}-datahub-dev"
+      - OutputBucket: "{{.Values.awsResourcePrefix}}-datahub-dev"
+      - DrBucket: "{{.Values.awsResourcePrefix}}-data-recovery-dev"
+      - kube2iamExecutorRole: ""
+      - ../../../values/env/client-dev/values.yaml
+      - ../../../values/env/migration-dev/values.yaml
+    secrets:
+      - ../../../values/defaults/secrets.yaml
+

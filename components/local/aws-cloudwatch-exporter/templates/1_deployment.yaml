@@ -1,0 +1,75 @@
+
+{{- with .Values }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.component}}
+  namespace: {{.namespace}}
+  labels:
+    release: {{.release}}
+    component:  {{.component}}
+spec:
+  selector:
+    matchLabels:
+      release: {{.release}}
+      component:  {{.component}}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        release: {{.release}}
+        component:  {{.component}}
+      annotations:
+        iam.amazonaws.com/role: {{.iamRole}}
+    spec:
+      serviceAccountName: {{.serviceAccount}}
+      imagePullSecrets:
+      - name: {{.artifactoryStore}}
+      containers:
+      - name: aws-cloudwatch-exporter-{{.region}}
+        image: {{.image}}
+        resources: {{toJson .resources | indent 2 }}
+        env:
+         - name: AWS_DEFAULT_REGION
+           value: "{{.region}}"
+          {{- if .useRegionalEndpoint}}
+         - name: AWS_STS_REGIONAL_ENDPOINTS
+           value: "regional"
+          {{- end }}
+        command:
+        - /bin/sh
+        - -c
+        - "yace --listen-address=:{{.exporterHTTPPort}} --config.file=/var/config/config.yml"
+        volumeMounts:
+        - name: app-config
+          mountPath: /var/config
+        - mountPath: /usr/local/share/ca-certificates
+          name: ssl-certs-extra
+        - mountPath: /usr/share/ca-certificates
+          name: ssl-certs-extra-1
+        - mountPath: /etc/ssl/certs
+          name: ssl-certs
+        securityContext:
+          privileged: true
+      volumes:
+      - name: app-config
+        configMap:
+          name: {{.component}}-config
+      - name: ssl-certs-extra
+        hostPath:
+          # directory location on host
+          path: /usr/local/share/ca-certificates
+      - name: ssl-certs-extra-1
+        hostPath:
+          # directory location on host
+          path: /usr/share/ca-certificates/
+      - name: ssl-certs
+        hostPath:
+          # directory location on host
+          path: /etc/ssl/certs
+
+
+{{- end }}

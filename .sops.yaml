@@ -1,0 +1,5 @@
+creation_rules:
+  #- path_regex: \.legacy\.yaml.dec$
+  - pgp: 'B5CB5C57BABD004D3CDFE69239D82DA257FD2668'
+  - path_regex: \.y(a)?ml$
+    pgp: 'B5CB5C57BABD004D3CDFE69239D82DA257FD2668'

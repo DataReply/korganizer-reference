@@ -1,0 +1,35 @@
+bases:
+  - ../../_defaults.yaml
+  - ../_namespace.yaml
+  - _app_group.yaml
+---
+values:
+  - app: grafana
+  - dataSourcePort: "9197"
+  - dataSourceSvc: "thanos-query"
+  - grafanaSecretName: grafana-admin
+  - grafanaInstance: grafana
+  - dashboardProviders: [base, gitlab-pipelines]
+  - lokiNamespace: base
+
+---
+templates:
+{{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
+
+releases:
+  - name: grafana-ingress
+    <<: *base-local
+    chart: ../../../../components/local/ingress-extension
+    values:
+      - component: grafana
+
+  - name: grafana-resources
+    <<: *base-local
+    chart: incubator/raw
+    version: 0.2.3
+
+  - name: grafana
+    <<: *base-local
+    chart: grafana/grafana
+    needs: [ {{ .Values.kubeContext }}/{{.Values.namespace}}/grafana-resources, {{ .Values.kubeContext }}/{{.Values.namespace}}/grafana-ingress]
+    version: 6.1.11

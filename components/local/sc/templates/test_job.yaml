@@ -1,0 +1,26 @@
+{{- if .Values.test.create }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "sc.fullname" . }}
+  labels:
+    {{- include "sc.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: app
+        image: {{ .Values.test.pod.image }}
+        command: ["/bin/sh"]
+        args: ["-c", "for ((i=1;i<=10;i++)); do echo $(date -u) >> /data/out.txt; sleep 1; done"]
+        volumeMounts:
+        - name: persistent-storage-test
+          mountPath: /data
+      volumes:
+      - name: persistent-storage-test
+        persistentVolumeClaim:
+          claimName: {{ include "sc.fullname" . }}
+{{end}}

@@ -1,0 +1,144 @@
+  base: &base-local
+    missingFileHandler: Debug
+    chart:  chart-artifactory/{{`{{ .Release.Name }}`}}
+    version: 1.0.0
+    kubeContext: {{ .Values.kubeContext }}
+    namespace: {{ .Values.namespace }}
+    secrets:
+      - ../../../values/defaults/secrets.yaml
+
+
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/secrets.yaml
+
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/secrets.yaml
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/secrets.yaml
+
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/secrets.yaml
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/secrets.yaml
+
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/secrets.yaml
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/secrets.yaml
+
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/{{`{{ .Release.Name }}`}}.secrets.yaml
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/{{`{{ .Release.Name }}`}}.secrets.yaml
+    valuesTemplate:
+      - namespace: {{ .Values.namespace }}
+      - component: '{{`{{ .Release.Name }}`}}'
+
+      # top level generics
+      - ../../../values/defaults/values.yaml
+      - ../../../values/defaults/values.gotmpl
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/values.yaml
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/values.gotmpl
+
+      # defaults and overrides on a namespace level
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/values.yaml
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/values.gotmpl
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/values.yaml
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/values.gotmpl
+
+      # defaults and overrides on a namespace+app-group level
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/values.yaml
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/values.gotmpl
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/values.yaml
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/values.gotmpl
+
+      # defaults and overrides on a namespace+app-group+app level
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/values.yaml
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/values.gotmpl
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/values.yaml
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/values.gotmpl
+
+      # defaults and overrides on a namespace+app-group+app+release level
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/{{`{{ .Release.Name }}`}}.yaml
+      - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/{{`{{ .Release.Name }}`}}.gotmpl
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/{{`{{ .Release.Name }}`}}.yaml
+      - ../../../values/env/{{`{{ .Environment.Name }}`}}/{{`{{ .Release.Namespace }}`}}/{{ .Values.appGroup }}/{{ .Values.app }}/{{`{{ .Release.Name }}`}}.gotmpl
+
+
+
+  deletable-annotation-pvc-adder: &deletable-annotation-pvc-adder
+    transformers:
+    - apiVersion: builtin
+      kind: AnnotationsTransformer
+      metadata:
+        name: disk-annotation-adder
+      annotations:
+        deletable: "true"
+      fieldSpecs:
+        - path: spec/volumeClaimTemplates/metadata/annotations
+          create: true
+          kind: StatefulSet
+
+  ingress-class-pvc-adder: &ingress-class-pvc-adder
+    transformers:
+      - apiVersion: builtin
+        kind: AnnotationsTransformer
+        metadata:
+          name: ingress-class-pvc-adder
+        annotations:
+          kubernetes.io/ingress.class: {{ .Values.defaultIngressClass }}
+        fieldSpecs:
+          - path: metadata/annotations
+            create: true
+            kind: Ingress
+
+  lock-release: &lock-release
+    transformers:
+      - apiVersion: builtin
+        kind: AnnotationsTransformer
+        metadata:
+          name: lock-rekease
+        annotations:
+          kapp.k14s.io/update-strategy: skip
+        fieldSpecs:
+          - path: metadata/annotations
+            create: true
+
+  classify-primary: &classify-primary
+    transformers:
+      - apiVersion: builtin
+        kind: LabelTransformer
+        metadata:
+          name: classify-as-primary-label-transformer
+        labels:
+          worker-group: "primary"
+        fieldSpecs:
+          - path: metadata/labels
+            create: true
+
+  classify-secondary: &classify-secondary
+    transformers:
+      - apiVersion: builtin
+        kind: LabelTransformer
+        metadata:
+          name: classify-as-secondary-label-transformer
+        labels:
+          worker-group: "secondary"
+        fieldSpecs:
+          - path: metadata/labels
+            create: true
+
+  classify-tertiary: &classify-tertiary
+    transformers:
+      - apiVersion: builtin
+        kind: LabelTransformer
+        metadata:
+          name: classify-as-tertiary-label-transformer
+        labels:
+          worker-group: "tertiary"
+        fieldSpecs:
+          - path: metadata/labels
+            create: true
+
+  classify-quaternary: &classify-quaternary
+    transformers:
+      - apiVersion: builtin
+        kind: LabelTransformer
+        metadata:
+          name: classify-as-quaternary-label-transformer
+        labels:
+          worker-group: "quaternary"
+        fieldSpecs:
+          - path: metadata/labels
+            create: true

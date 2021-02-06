@@ -1,0 +1,14 @@
+apiVersion: vendir.k14s.io/v1alpha1
+kind: Config
+directories:
+- path: vendor/charts
+  contents:
+
+  - path: aws-ebs-csi-driver
+    git:
+      url: https://github.com/kubernetes-sigs/aws-ebs-csi-driver
+      ref: v0.8.0
+    newRootPath:  charts/aws-ebs-csi-driver
+    includePaths:
+      - charts/aws-ebs-csi-driver/**/*
+

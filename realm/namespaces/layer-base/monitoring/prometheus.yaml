@@ -1,0 +1,80 @@
+bases:
+  - ../../_defaults.yaml
+  - ../_namespace.yaml
+  - _app_group.yaml
+values:
+  - appSlug: monitoring
+  - app: prometheus
+
+---
+templates:
+{{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
+
+releases:
+  # mostly to test loki 2.0's ability to trigger alerts based on log messages
+  - name: prometheus
+    <<: *base-local
+    chart: prometheus-community/kube-prometheus-stack
+    version: 12.0.3
+    values:
+      - kube-state-metrics:
+          image:
+            repository: quay.artifactory.company.com/coreos/kube-state-metrics
+          imagePullSecrets: [{{.Values.artifactorySecret}}]
+      - prometheus-node-exporter:
+          serviceAccount:
+            imagePullSecrets: [{{.Values.artifactorySecret}}]
+          image:
+            repository: quay.artifactory.company.com/prometheus/node-exporter
+      - grafana:
+          enabled: false
+
+      - prometheusOperator:
+          admissionWebhooks:
+            patch:
+              image:
+                repository: {{  .Values.artifactory }}/jettech/kube-webhook-certgen
+
+          image:
+            repository: quay.artifactory.company.com/prometheus-operator/prometheus-operator
+          prometheusConfigReloaderImage:
+            repository: quay.artifactory.company.com/prometheus-operator/prometheus-config-reloader
+          configmapReloadImage:
+            repository: {{  .Values.artifactory }}/jimmidyson/configmap-reload
+
+      - prometheus:
+          # DO NOT INSTALL THE DEFAULT PROMETHEUS SHIPPED WITH THE STACK
+          enabled: false
+
+
+      - global:
+          imagePullSecrets: [{{.Values.artifactorySecret}}]
+          rbac:
+            create: true
+      - pushgateway:
+          enabled: false
+      - alertmanager:
+          alertmanagerSpec:
+            image:
+              repository: quay.artifactory.company.com(prometheus/alertmanager
+          enabled: true
+          config:
+            global:
+              resolve_timeout: 5m
+            route:
+              receiver: 'default'
+              group_by: ['alertname', 'cluster', 'namespace', 'pod']
+              group_wait: 30s
+              group_interval: 5m
+              repeat_interval: 12h
+
+
+
+  # This chart is supposed to test if prometheus specs are properly picked up by the operator
+  - name: prometheus-base
+    <<: *base-local
+    chart: ../../../../components/local/prometheus
+    values:
+      - image: quay.artifactory.company.com/prometheus/prometheus
+    labels:
+      targetNamespace: base

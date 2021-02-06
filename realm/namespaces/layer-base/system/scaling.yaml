@@ -1,0 +1,36 @@
+bases:
+  - ../../_defaults.yaml
+  - ../_namespace.yaml
+  - _app_group.yaml
+
+values:
+  - app: scaling
+---
+templates:
+{{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
+
+releases:
+  - name: cluster-autoscaler
+    <<: *base-local
+    chart: autoscaler/cluster-autoscaler
+    version: 9.3.0
+    values:
+      - nameOverride: "cluster-autoscaler"
+      - image:
+          repository: {{.Values.registry}}/autoscaling/cluster-autoscaler
+          tag: v1.18.3
+      - cloudProvider: aws
+      - awsRegion: {{.Values.awsRegion}}
+      - autoDiscovery:
+          clusterName: {{.Values.clusterName}}
+      - extraArgs:
+          aws-use-static-instance-list: true
+          #balance-similar-node-groups: true
+      - extraEnv:
+          AWS_STS_REGIONAL_ENDPOINTS: "regional"
+      - rbac:
+          serviceAccount:
+            create: true
+            name: "cluster-autoscaler"
+            annotations:
+              "eks.amazonaws.com/role-arn": "arn:aws:iam::{{.Values.awsAccountId}}:role/{{.Values.awsResourcePrefix}}-cluster-autoscaler-{{.Values.envSlug}}"

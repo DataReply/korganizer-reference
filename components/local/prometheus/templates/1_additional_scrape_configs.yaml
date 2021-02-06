@@ -1,0 +1,16 @@
+ 
+{{- with .Values }}
+  
+  {{ if .additionalScrapeConfigs }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .component }}-additional-scrape-configs
+  namespace: {{.namespace}}
+data:
+  additional-scrape-configs.yaml: {{ .additionalScrapeConfigs | toJson | b64enc }}
+{{ end }}
+  
+  
+{{- end }}

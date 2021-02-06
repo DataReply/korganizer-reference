@@ -1,0 +1,15 @@
+envSlug: "prod"
+istio: true
+Caps:
+  KubeVersion:
+    Version: 1.12.0
+
+imagePullPolicy: IfNotPresent
+
+dnsTestEntries:
+  - name: "dwh-prod"
+    dns: "dhw.onprem.company.com"
+
+tcpTestEntries:
+  - name: "dwh-prod"
+    destination: "109.127.82.99:1526"

@@ -1,0 +1,72 @@
+admin:
+    existingSecret: {{.Values.grafanaSecretName}}
+podAnnotations:
+{{- with .Values.istioAnnotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+
+rbac:
+  namespaced: true
+  pspEnabled: false
+  enabled: true
+persistence:
+  storageClassName: {{.Values.storageClassDefault}}
+  enabled: true
+  annotations:
+    kapp.k14s.io/owned-for-deletion: ""
+annotations:
+    kapp.k14s.io/update-strategy: always-replace
+image:
+  pullSecrets: [{{.Values.artifactorySecret}}]
+  repository: {{.Values.artifactory}}/grafana/grafana
+testFramework:
+  enabled: false
+
+dashboardProviders:
+ dashboardproviders.yaml:
+  apiVersion: 1
+  providers:
+    {{ range $provider := .Values.dashboardProviders }}
+    - name: '{{$provider}}'
+      orgId: 1
+      folder: '{{$provider}}'
+      type: file
+      disableDeletion: true
+      editable: true
+      options:
+        path: /var/lib/grafana/dashboards/{{$provider}}
+    {{ end }}
+
+dashboardsConfigMaps:
+   {{ range $provider := .Values.dashboardProviders }}
+    {{$provider}}: {{$.Values.grafanaInstance}}-dashboards-{{$provider}}
+   {{ end }}
+
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      # <string, required> name of the datasource. Required
+      - name: prometheus
+        # <string, required> datasource type. Required
+        type: prometheus
+        # <string, required> access mode. direct or proxy. Required
+        access: proxy
+        # <string> url
+        url: http://{{.Values.dataSourceSvc}}-csvc.{{.Values.namespace}}:{{.Values.dataSourcePort}}
+        # <bool> enable/disable basic auth
+        basicAuth: false
+        version: 1
+        # <bool> allow users to edit datasources from the UI.
+        editable: false
+
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki-metrics-svc.{{.Values.lokiNamespace}}:3100
+        basicAuth: false
+        version: 1
+        editable: false
+        jsonData:
+          maxLines: 1000

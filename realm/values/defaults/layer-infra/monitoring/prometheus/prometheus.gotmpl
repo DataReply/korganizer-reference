@@ -1,0 +1,15 @@
+component: {{ .Values.appSlug }}
+serviceMonitorSelector:
+  matchExpressions:
+    - {key: component, operator: NotIn, values: ["{{ .Values.appSlug }}"]}
+
+serviceMonitorNamespaceSelector:
+  matchLabels:
+    includeMonitoring: "yes"
+
+ruleNamespaceSelector:
+  matchLabels:
+    includeMonitoring: "yes"
+
+
+image: "quay-remote.artifactory.company.com/prometheus/prometheus

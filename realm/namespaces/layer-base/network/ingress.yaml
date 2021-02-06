@@ -1,0 +1,66 @@
+bases:
+  - ../../_defaults.yaml
+  - ../_namespace.yaml
+  - _app_group.yaml
+values:
+  - app: ingress
+  - sampleApp: hello-kubernetes
+
+---
+templates:
+{{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
+
+releases:
+
+  - name: ingress-nginx
+    <<: *base-local
+    chart: ingress-nginx/ingress-nginx
+    version: 3.15.2
+    values:
+      - rbac:
+          create: true
+      - controller:
+          tolerations:
+            - key: "layer"
+              operator: "Equal"
+              value: "web"
+              effect: "NoSchedule"
+
+          config:
+            use-forwarded-headers: "true"
+          image:
+            repository: {{.Values.artifactory}}/ingress-nginx/controller
+            tag: "v0.41.2"
+            pullPolicy: IfNotPresent
+            # www-data -> uid 101
+            runAsUser: 101
+            allowPrivilegeEscalation: true
+          ingressClass: {{.Values.defaultIngressClass}}
+          # publishService required to Allow ELB Alias for DNS registration w/ external-dns
+          publishService:
+            enabled: true
+          admissionWebhooks:
+            enabled: false
+          tcp:
+            configNameSpace: $(POD_NAMESPACE)/tcp-services
+          udp:
+            configNameSpace: $(POD_NAMESPACE)/udp-services
+          nodeSelector:
+            layer: {{.Values.ingressLayerName}}
+          service:
+            type: NodePort
+            nodePorts:
+                http: "30005"
+                https: "30006"
+            # TLS (https) terminated at ELB, so internal endpoint is 'http'
+            targetPorts:
+              https: http
+
+  - name: ingress-examples
+    <<: *base-local
+
+    chart: incubator/raw
+    version: 0.2.3
+
+    needs: [ {{ .Values.kubeContext }}/{{.Values.namespace}}/ingress-nginx]
+    <<: *ingress-class-pvc-adder

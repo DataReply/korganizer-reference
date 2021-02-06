@@ -1,0 +1,66 @@
+bases:
+  - ../../_defaults.yaml
+  - ../_namespace.yaml
+  - _app_group.yaml
+values:
+  - appSlug: monitoring
+  - app: prometheus
+  - pushGtwName: prometheus-pushgateway
+
+---
+templates:
+{{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
+
+  prometheus: &prometheus
+    <<: *base-local
+    chart:  ../../../../components/local/prometheus
+    version: 1.1.3
+    {{if eq .Environment.Name .Values.eksDev .Values.eksProd }}
+    transformers:
+      - apiVersion: builtin
+        kind: AnnotationsTransformer
+        metadata:
+          name: service-account-annotation-adder
+
+        fieldSpecs:
+          - path: metadata/annotations
+            create: true
+            kind: ServiceAccount
+      {{end}}
+
+
+
+releases:
+  - name: {{.Values.pushGtwName}}
+    <<: *base-local
+    version: 1.4.2
+    labels:
+      targetNamespace: {{.Values.namespace}}
+    strategicMergePatches:
+      - kind: ServiceAccount
+        apiVersion: v1
+        metadata:
+          name: {{.Values.pushGtwName}}
+        imagePullSecrets:
+          - name: {{.Values.artifactorySecret}}
+
+
+  - name: prometheus
+    installed: false
+    labels:
+      targetNamespace: base
+    <<: *prometheus
+
+
+  - name: prometheus-data
+    labels:
+      targetNamespace: {{.Values.namespacePrefix}}-data
+    <<: *prometheus
+
+  - name: prometheus-infra
+    labels:
+      targetNamespace: {{.Values.namespacePrefix}}-infra
+    <<: *prometheus
+
+
+

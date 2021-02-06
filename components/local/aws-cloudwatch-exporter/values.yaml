@@ -1,0 +1,13 @@
+image: quay-remote.artifactory.company.com/invisionag/yet-another-cloudwatch-exporter:v0.13.7
+region: eu-central-1
+useRegionalEndpoint: true
+exporterHTTPPort: 5000
+layer: base
+resources:
+  limits:
+    memory: 800Mi
+  requests:
+    cpu: 150m
+    memory: 500Mi
+iamRole: "kube2iam-aws-cloudwatch-exporter-role"
+serviceAccountName: "default"

@@ -1,0 +1,28 @@
+ 
+{{- with .Values }}
+  
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{.component}}-metrics-svc
+  namespace: {{.namespace}}
+  labels:
+    release: {{.release}}
+    component:  {{.component}}
+    layer: {{.layer}}
+    version: {{.version}}
+spec:
+  selector:
+    matchLabels:
+      component: {{.component}}
+  targetLabels:
+  - component
+  endpoints:
+  - port: j-port-{{trunc 8 (initials (.component | replace "-" " ")) }}
+    scrapeTimeout: "45s"
+    interval: "50s"
+
+  
+  
+{{- end }}

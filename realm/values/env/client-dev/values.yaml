@@ -1,0 +1,26 @@
+envSlug: "dev"
+
+#OTHER BMI CONFIGS
+
+
+istio: true
+# in dev always pull newer image (e.g. latest)
+imagePullPolicy: Always
+
+Caps:
+  KubeVersion:
+    Version: 1.12.0
+
+dnsTestEntries:
+  - name: "dwh"
+    dns: "dhw.onprem.company.com"
+
+
+tcpTestEntries:
+  - name: "dwh"
+    destination: "109.127.82.719:1526"
+
+
+httpTestEntries:
+  - name: "google"
+    url: "https://google.com"

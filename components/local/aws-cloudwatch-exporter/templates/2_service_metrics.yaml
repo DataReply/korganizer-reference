@@ -1,0 +1,23 @@
+ 
+{{- with .Values }}
+  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.component}}-metrics-svc
+  namespace: {{.namespace}}
+  labels:
+    release: {{.release}}
+    component:  {{.component}}
+    version: {{.version}}
+spec:
+  ports:
+    - port: {{.exporterHTTPPort}}
+      name: j-port-{{trunc 8 (initials (.component | replace "-" " ")) }}
+  selector:
+    component: {{.component}}
+
+  
+  
+{{- end }}

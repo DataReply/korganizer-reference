@@ -1,0 +1,7 @@
+apiVersion: v1
+description: auto-generated boi.
+engine: gotpl
+maintainers:
+  - name: twiechert
+name:  scheduling-policy
+version: "1.0.0"

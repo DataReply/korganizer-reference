@@ -1,0 +1,11 @@
+test:
+  create: true
+  pvc:
+    size: 10Gi
+    accessMode: ReadWriteOnce
+storageClass:
+  provisionerType: ebs.csi.aws.com
+  VolumeBindingMode: WaitForFirstConsumer
+  allowVolumeBinding: true
+  parameters:
+    csi.storage.k8s.io/fstype: xfs

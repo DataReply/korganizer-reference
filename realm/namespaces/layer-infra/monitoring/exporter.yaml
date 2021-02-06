@@ -1,0 +1,41 @@
+bases:
+  - ../../_defaults.yaml
+  - ../_namespace.yaml
+  - _app_group.yaml
+---
+
+values:
+  - app: exporter
+  - awsCloudwatchExporterRoleName: {{.Values.awsResourcePrefix}}-aws-cloudwatch-exporter-{{.Values.envSlug}}
+
+---
+templates:
+{{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
+
+releases:
+
+  -  name: prometheus-blackbox-exporter
+     <<: *base-local
+     chart: prometheus-community/prometheus-blackbox-exporter
+     version: 4.10.2
+     values:
+       - image:
+           repository: {{  .Values.artifactory }}/prom/blackbox-exporter
+           pullSecrets:
+             - {{.Values.artifactorySecret}}
+
+  - name: aws-cloudwatch-exporter
+    <<: *base-local
+    chart: ../../../../components/local/aws-cloudwatch-exporter
+    installed: false #{{ eq .Environment.Name .Values.eksProd .Values.eksDev }}
+    needs: [ {{ .Values.kubeContext }}/{{.Values.namespace}}/aws-cloudwatch-exporter-sa]
+    values:
+      - image:  quay-remote.artifactory.company.com/invisionag/yet-another-cloudwatch-exporter:v0.13.7
+
+
+  - name: aws-cloudwatch-exporter-sa
+    <<: *base-local
+    installed: {{ eq .Environment.Name .Values.eksProd .Values.eksDev }}
+    chart: incubator/raw
+    version: 0.2.3
+

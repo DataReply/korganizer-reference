@@ -1,0 +1,8 @@
+component: {{.Values.pushGtwName}}
+serviceAccount:
+    create: true
+image:
+    repository: {{.Values.artifactory}}/prom/pushgateway
+serviceMonitor:
+    enabled: true
+    namespace:  {{ .Values.namespace }}

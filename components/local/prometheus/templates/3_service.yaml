@@ -1,0 +1,28 @@
+ 
+{{- with .Values }}
+  
+---
+# Source: zookeeper/templates/csvc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.component}}-csvc
+  namespace: {{.namespace}}
+  annotations:
+    kapp.k14s.io/disable-label-scoping: ""
+  labels:
+    release: {{.release}}
+    component:  {{.component}}
+    version: {{.version}}
+spec:
+  ports:
+    - port: {{.port}}
+      name: promclientport
+      targetPort : {{.containerPort}}
+      protocol: TCP
+  selector:
+    prometheus: {{.component}}
+
+  
+  
+{{- end }}

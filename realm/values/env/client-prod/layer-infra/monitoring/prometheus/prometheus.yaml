@@ -1,0 +1,9 @@
+resources:
+  limits:
+    cpu: "4"
+    memory: 34Gi
+  requests:
+    cpu: "2"
+    memory: 34Gi
+diskSize: 350Gi
+retention: 7d

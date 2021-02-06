@@ -1,0 +1,30 @@
+rbac:
+  create: true
+# this is needed atm due to https://github.com/kyverno/kyverno/issues/1147
+createSelfSignedCert: true
+initImage:
+  repository: {{.Values.artifactory}}/kyverno/kyvernopre
+  tag: v1.3.2-rc1
+image:
+  repository: {{.Values.artifactory}}/kyverno/kyverno
+  tag: v1.3.2-rc1
+  pullSecrets:
+  - name: {{.Values.artifactorySecret}}
+
+config:
+  # resource types to be skipped by kyverno policy engine
+  # Make sure to surround each entry in quotes so that it doesn't get parsed
+  # as a nested YAML list. These are joined together without spaces in the configmap
+  resourceFilters:
+  - "[Event,*,*]"
+  - "[*,kube-system,*]"
+  - "[*,kube-public,*]"
+  - "[*,kube-node-lease,*]"
+  - "[APIService,*,*]"
+  - "[TokenReview,*,*]"
+  - "[SubjectAccessReview,*,*]"
+  - "[*,kyverno,*]"
+  - "[Binding,*,*]"
+  - "[ReplicaSet,*,*]"
+  - "[ReportChangeRequest,*,*]"
+  - "[ClusterReportChangeRequest,*,*]"

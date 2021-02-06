@@ -1,0 +1,63 @@
+pspEnabled: false
+serviceMonitor:
+  enabled: true
+  targets:
+    {{- range $entry := .Values.dnsTestEntries }}
+    - name: {{$entry.name}}-dns
+      url: {{$.Values.dnsServer}}
+      interval: 60s
+      scrapeTimeout: 60s
+      module: {{$entry.name}}-dns
+      labels: {}
+      additionalMetricsRelabels: {}
+    {{- end }}
+
+   {{- range $entry := .Values.httpTestEntries }}
+    - name: {{$entry.name}}-http
+      url: {{$entry.url}}
+      interval: 60s
+      scrapeTimeout: 60s
+      module: http_2xx_all
+      labels: {}
+      additionalMetricsRelabels: {}
+    {{- end }}
+
+   {{- range $entry := .Values.tcpTestEntries }}
+    - name: {{$entry.name}}-tcp
+      url: {{$entry.destination}}
+      interval: 60s
+      scrapeTimeout: 60s
+      module: tcp_connect
+      labels: {}
+      additionalMetricsRelabels: {}
+    {{- end }}
+
+config:
+  modules:
+    http_2xx_all:
+        prober: http
+        timeout: 5s
+        http:
+          valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+          valid_status_codes: [200, 202, 401, 404, 403]  # Defaults to 2xx
+          method: GET
+
+    tls_connect:
+      prober: tcp
+      timeout: 5s
+      tcp:
+        tls: true
+    tcp_connect:
+      prober: tcp
+      timeout: 5s
+
+    {{- range $entry := .Values.dnsTestEntries }}
+    {{$entry.name}}-dns:
+        prober: dns
+        timeout: 5s
+        dns:
+          query_name: "{{$entry.dns}}"
+          query_type: "A"
+          preferred_ip_protocol: "ip4"
+    {{- end }}
+

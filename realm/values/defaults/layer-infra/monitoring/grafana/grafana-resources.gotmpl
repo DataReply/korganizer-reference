@@ -1,0 +1,29 @@
+resources:
+- apiVersion: v1
+  kind: Secret
+  type: Opaque
+  metadata:
+    name: {{.Values.grafanaSecretName}}
+  data:
+    admin-user: {{.Values.grafana.user  | b64enc}}
+    admin-password: {{.Values.grafana.password  | b64enc}}
+
+{{ range $provider := .Values.dashboardProviders }}
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: {{$.Values.grafanaInstance}}-dashboards-{{$provider}}
+    annotations:
+        kapp.k14s.io/disable-original: ""
+        kapp.k14s.io/versioned: ""
+        kapp.k14s.io/num-versions: "2"
+  data:
+    {{ $dir := print "echo -n dashboards/" $provider "/*.json" }}
+    {{- range $_, $file := ( exec "bash" (list "-c" $dir) | splitList " " ) }}
+    {{ $fileContent := readFile $file}}
+    {{base $file}}: |-
+       {{$fileContent}}
+    {{ end }}
+{{ end }}
+
+

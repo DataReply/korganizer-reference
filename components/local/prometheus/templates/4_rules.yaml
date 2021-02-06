@@ -1,0 +1,19 @@
+
+{{- with .Values }}
+
+  {{ if .istio }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+ name: {{.component}}-rule
+ namespace: {{.namespace}}
+spec:
+ host: "{{.component}}-csvc.{{.namespace}}.svc.cluster.local"
+ trafficPolicy:
+   tls:
+     mode: DISABLE
+{{ end }}
+
+
+{{- end }}

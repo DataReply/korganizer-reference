@@ -1,0 +1,218 @@
+bases:
+  - ../../_defaults.yaml
+  - ../_namespace.yaml
+  - _app_group.yaml
+
+values:
+  - app: volumes
+---
+
+templates:
+{{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
+
+  .common: &chart
+    chart:  ../../../../components/local/sc
+
+releases:
+  - name: gp3
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: gp3
+        reclaimPolicy: Delete # or Retain
+        parameters:
+          type: gp3
+          encrypted: "false"
+          iops: "5000"
+          throughput: "500"
+          # IOPS:GB ratio for gp3 is 500:1
+
+  - name: gp2
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: gp2
+        reclaimPolicy: Retain
+        defaultClass: true
+        # mountOptions: #
+        parameters:
+          type: gp2
+
+  - name: gp2-encrypted
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: gp2-encrypted
+        reclaimPolicy: Retain
+        # mountOptions: #
+        parameters:
+          type: gp2
+          encrypted: "true"
+
+  - name: gp2-encrypted-kms-key
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: gp2-encrypted-kms-key
+        reclaimPolicy: Retain
+        # mountOptions: #
+        parameters:
+          type: gp2
+          encrypted: "true"
+          kmsKeyId: "arn:aws:kms:eu-central-1:{{.Values.awsAccountId}}:alias/eks-ebs-disk-key"
+
+  - name: gp2-encrypted-kms-key-no-reclaim
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: gp2-encrypted-kms-key-no-reclaim
+        reclaimPolicy: Delete
+        # mountOptions: #
+        parameters:
+          type: gp2
+          encrypted: "true"
+          kmsKeyId: "arn:aws:kms:eu-central-1:{{.Values.awsAccountId}}:alias/eks-ebs-disk-key"
+
+  - name: gp2-no-reclaim
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: gp2-no-reclaim
+        reclaimPolicy: Delete
+        # mountOptions: #
+        parameters:
+          type: gp2
+          encrypted: "false"
+
+  - name: io1
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: io1
+        reclaimPolicy: Retain
+        # mountOptions: #
+        parameters:
+          type: io1
+          iopsPerGB: "50"
+
+  - name: io1-encrypted-kms-key
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: io1-encrypted-kms-key
+        reclaimPolicy: Retain
+        # mountOptions: #
+        parameters:
+          kmsKeyId: "arn:aws:kms:eu-central-1:{{.Values.awsAccountId}}:alias/eks-ebs-disk-key"
+          type: io1
+          iopsPerGB: "50"
+          encrypted: "true"
+
+  - name: io1-encrypted-kms-key-no-reclaim
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: io1-encrypted-kms-key-no-reclaim
+        reclaimPolicy: Delete
+        # mountOptions: #
+        parameters:
+          kmsKeyId: "arn:aws:kms:eu-central-1:{{.Values.awsAccountId}}:alias/eks-ebs-disk-key"
+          type: io1
+          iopsPerGB: "50"
+          encrypted: "true"
+
+  - name: io1-no-reclaim
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: io1-no-reclaim
+        reclaimPolicy: Delete
+        # mountOptions: #
+        parameters:
+          type: io1
+          iopsPerGB: "50"
+
+  - name: st1
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: st1
+        reclaimPolicy: Retain
+        parameters:
+          type: st1
+    - test:
+        create: false
+
+  - name: st1-encrypted
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: st1-encrypted
+        reclaimPolicy: Retain
+        parameters:
+          type: st1
+          encrypted: "true"
+    - test:
+        create: false
+
+  - name: st1-encrypted-kms-key
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: st1-encrypted-kms-key
+        reclaimPolicy: Retain
+        parameters:
+          kmsKeyId: "arn:aws:kms:eu-central-1:{{.Values.awsAccountId}}:alias/eks-ebs-disk-key"
+          type: st1
+          encrypted: "true"
+    - test:
+        create: false
+
+  - name: st1-encrypted-kms-key-no-reclaim
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: st1-encrypted-kms-key-no-reclaim
+        reclaimPolicy: Delete
+        parameters:
+          kmsKeyId: "arn:aws:kms:eu-central-1:{{.Values.awsAccountId}}:alias/eks-ebs-disk-key"
+          type: st1
+          encrypted: "true"
+    - test:
+        create: false
+
+  - name: st1-no-reclaim
+    <<: *base-local
+    <<: *chart
+    values:
+    - storageClass:
+        name: st1-no-reclaim
+        reclaimPolicy: Delete
+        parameters:
+          type: st1
+    - test:
+        create: false
+
+
+
+
+
+
+
+
+
+

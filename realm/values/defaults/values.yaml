@@ -1,0 +1,34 @@
+---
+#GENERAL CONFIGS
+release: stable
+version: v1.1
+
+
+#ISTIO GATEWAY AND DNS CONFIGS
+
+gatewayName: gw.infra
+
+
+#SECUTIRY AND PASS
+ssl: True
+volumesEncryption: True
+performantEBS: False
+rbac: True
+auth: True
+
+
+#MONITORING - LOGGING - TRACING
+alertmanagerNamespace: base
+alertBoost: False
+deployAlerts: true
+alertRoleName: "alert-rules"
+
+
+
+# SIDECAR LIMITS
+sidecar:
+  inject: true
+  proxyCPU: "10m"
+  proxyMemory: "256Mi"
+  proxyLimitCPU: "20m"
+  proxyLimitMemory: "512Mi"

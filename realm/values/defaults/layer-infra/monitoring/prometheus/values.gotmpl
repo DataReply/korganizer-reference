@@ -1,0 +1,32 @@
+
+rbac: false
+volumesEncryption: False
+alertManagerNamespace: base
+matchLabels:
+  role: alert-rules
+  prometheus: {{ .Values.appSlug }}
+
+{{$nsSlug:=  trimPrefix (print .Values.namespacePrefix "-") .Release.Labels.targetNamespace  }}
+component: {{ .Values.appSlug }}-{{ $nsSlug }}
+
+serviceMonitorSelector:
+  matchExpressions:
+    - {key: component, operator: NotIn, values: ["{{ .Values.appSlug }}-{{ $nsSlug }}"]}
+
+serviceMonitorNamespaceSelector:
+  matchLabels:
+    namespace: "{{ .Release.Labels.targetNamespace }}"
+
+ruleNamespaceSelector:
+  matchLabels:
+    namespace: "{{ .Release.Labels.targetNamespace }}"
+
+{{if eq  $nsSlug "infra" }}
+podMonitorNamespaceSelector:
+  matchLabels:
+    namespace: "{{ .Release.Labels.targetNamespace }}"
+
+podMonitorSelector:
+  matchExpressions:
+    - {key: component, operator: NotIn, values: ["{{ .Values.appSlug }}-{{ $nsSlug }}"]}
+{{end}}

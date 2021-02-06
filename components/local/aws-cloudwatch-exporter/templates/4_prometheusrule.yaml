@@ -1,0 +1,25 @@
+ 
+{{- with .Values }}
+  
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ .component }}-prometheus-rule
+  namespace: {{ .namespace }}
+  labels:
+    role: alert-rules
+    prometheus: monitoring
+    component: {{.component}}
+spec:
+  groups:
+  - name: AwsEbsMetrics
+    rules:
+    - expr: aws_ebs_volume_read_ops_average+aws_ebs_volume_write_ops_average
+      record: aws_ebs_iops_avg
+
+    - expr: kubelet_volume_stats_used_bytes/kubelet_volume_stats_capacity_bytes
+      record: aws_ebs_utilization
+  
+  
+{{- end }}

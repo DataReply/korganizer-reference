@@ -1,0 +1,26 @@
+storageClass:
+  create: true
+  name: test-storage-class
+  defaultClass: false
+  provisionerType: ebs.csi.aws.com
+  volumeBindingMode: Immediate # or WaitForFirstConsumer
+  reclaimPolicy: Delete # or Retain
+  allowVolumeExpansion: true
+  # mountOptions: #
+  # This is a map, str -> str
+  parameters:
+    csi.storage.k8s.io/fstype: ext4 # can also be xfs
+    type: gp3
+    encrypted: "false"
+    iops: "5000" # Max 16k/s, only valid when using gp3
+    throughput: "125" #Max 1000Mbit/s, only valid when using gp3
+    # kmsKeyId:
+    # iopsPerGB: # only valid when using io1, io2
+    # Note: maximum ratio is 50:1
+test:
+  create: true
+  pvc:
+    size: 1GB
+    accessMode: ReadWriteOnce
+  pod:
+    image: centos

@@ -1,0 +1,102 @@
+ 
+{{- with .Values }}
+  
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: {{.component}}
+  namespace: {{.namespace}}
+  labels:
+    release: {{.release}}
+    component:  {{.component}}
+    version: {{.version}}
+spec:
+  replicas: {{.replicas}}
+  {{ if .additionalPodMetadata }}
+  podMetadata: {{toJson .additionalPodMetadata |indent 12 }}
+  {{ end }}
+
+  {{ if .image }}
+  image: {{.image}}
+  {{ end }}
+
+  {{ if .imagePullSecrets }}
+  imagePullSecrets:
+    - name: {{.artifactoryStore}}
+  {{ end }}
+  serviceAccountName: prometheus-{{.namespace}}
+  version: {{.promVersion}}
+  paused: {{.paused}}
+  {{ if .ruleNamespaceSelector }}
+  ruleNamespaceSelector: {{toJson .ruleNamespaceSelector |indent 12 }}
+  {{ end }}
+  {{ if .podMonitorSelector }}
+  podMonitorSelector: {{toJson .podMonitorSelector |indent 12 }}
+  {{ end }}
+  {{ if .serviceMonitorSelector }}
+  serviceMonitorSelector: {{toJson .serviceMonitorSelector |indent 12 }}
+  {{ end }}
+  {{ if .podMonitorNamespaceSelector }}
+  podMonitorNamespaceSelector: {{toJson .podMonitorNamespaceSelector |indent 12 }}
+  {{ end }}
+  {{ if .serviceMonitorNamespaceSelector }}
+  serviceMonitorNamespaceSelector: {{toJson .serviceMonitorNamespaceSelector |indent 12 }}
+  {{ end }}
+  {{ if .additionalScrapeConfigs }}
+  additionalScrapeConfigs:
+    key: additional-scrape-configs.yaml
+    name: {{ .component }}-additional-scrape-configs
+    optional: {{ .additionalScrapeConfigsOptional }}
+  {{ end }}
+  retention: {{.retention}}
+  resources: {{toJson .resources |indent 12 }}
+  externalLabels: {{toJson .externalLabels |indent 12 }}
+  enableAdminAPI: true
+  # affinity:
+  #   podAntiAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #     - topologyKey: kubernetes.io/hostname
+  #       labelSelector:
+  #         matchLabels:
+  #           component: {{ .component }}
+  storage:
+    volumeClaimTemplate:
+      spec:
+        {{if .noReclaim}}
+        {{if .volumesEncryption}}
+        storageClassName: "gp2-encrypted-kms-key-no-reclaim"
+        {{else}}
+        storageClassName: "gp2-no-reclaim"
+        {{end}}
+        {{else}}
+        {{if .volumesEncryption}}
+        storageClassName: "gp2-encrypted-kms-key"
+        {{else}}
+        storageClassName: "gp2"
+        {{end}}
+        {{end}}
+        resources:
+          requests:
+            storage:  {{.diskSize}}
+  logLevel: {{ .logLevel }}
+  {{ if .thanos }}
+  thanos: {{toJson .thanos |indent 12 }}
+  {{ end }}
+  alerting:
+    alertmanagers:
+    - namespace: {{.alertManagerNamespace}}
+      name: alertmanager-alertmanager
+      port: web
+  {{ if .matchLabels }}
+  ruleSelector:
+    matchLabels:  {{toJson .matchLabels |indent 12 }}
+  {{ end }}
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 3000
+    fsGroup: 2000
+
+  
+  
+{{- end }}

@@ -1,0 +1,11 @@
+noReclaim: true
+resources:
+  limits:
+    cpu: "2"
+    memory: 16Gi
+  requests:
+    cpu: "1"
+    memory: 6Gi
+diskSize: 350Gi
+retention: 5d
+volumesEncryption: False

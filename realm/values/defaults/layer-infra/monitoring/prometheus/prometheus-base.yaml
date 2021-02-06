@@ -1,0 +1,3 @@
+ruleNamespaceSelector:
+  matchLabels:
+    namespace: infra

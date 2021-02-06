@@ -1,0 +1,15 @@
+{{- if .Values.test.create }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "sc.fullname" . }}
+  labels:
+    {{- include "sc.labels" . | nindent 4 }}
+spec:
+  storageClassName: {{.Values.storageClass.name}}
+  accessModes:
+    - {{ .Values.test.pvc.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.test.pvc.size | quote }}
+{{- end }}

@@ -1,0 +1,28 @@
+ 
+{{- with .Values }}
+  
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{.component}}-metrics-sm
+  namespace: {{.namespace}}
+  labels:
+    layer: {{.layer}}
+    release: {{.release}}
+    component:  {{.component}}
+    version: {{.version}}
+spec:
+  selector:
+    matchLabels:
+      component: {{.component}}
+  targetLabels:
+  - component
+  endpoints:
+  - port: promclientport
+    scrapeTimeout: "30s"
+    interval: "40s"
+
+  
+  
+{{- end }}

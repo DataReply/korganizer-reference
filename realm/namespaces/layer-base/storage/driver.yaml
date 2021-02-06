@@ -1,0 +1,52 @@
+bases:
+  - ../../_defaults.yaml
+  - ../_namespace.yaml
+  - _app_group.yaml
+
+values:
+  - app: driver
+---
+templates:
+{{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
+
+releases:
+  - name: ebs-csi
+    <<: *base-local
+    chart: ../../../../components/vendor/charts/aws-ebs-csi-driver
+    #installed: false
+    transformers:
+    - apiVersion: builtin
+      kind: ImageTagTransformer
+      metadata:
+        name: patch-hardcoded-ebs-image
+      imageTag:
+        name: quay.io/k8scsi/snapshot-controller:v2.1.1
+        newName:  quay-remote.artifactory.company.com/k8scsi/snapshot-controller
+      fieldSpecs:
+        - path: spec/template/spec/containers[]/image
+
+
+
+    values:
+      - imagePullSecrets:[{{.Values.artifactorySecret}}]
+      - sidecars:
+          provisionerImage:
+            repository: quay-remote.artifactory.company.com/k8scsi/csi-provisioner
+          attacherImage:
+            repository: quay-remote.artifactory.company.com/k8scsi/csi-attacher
+          snapshotterImage:
+            repository: quay-remote.artifactory.company.com/k8scsi/csi-snapshotter
+          livenessProbeImage:
+            repository: quay-remote.artifactory.company.com/k8scsi/livenessprobe
+          resizerImage:
+            repository: quay-remote.artifactory.company.com/k8scsi/csi-resizer
+          nodeDriverRegistrarImage:
+            repository: quay-remote.artifactory.company.com/k8scsi/csi-node-driver-registrar
+      - snapshotController:
+          image: quay-remote.artifactory.company.com/k8scsi/snapshot-controller
+          tag: "v2.1.1"
+      - image:
+          repository:  gcr.artifactory.company.com/provider-aws/aws-ebs-csi-driver
+      - enableVolumeScheduling: true
+      - enableVolumeResizing: true
+      - enableVolumeSnapshot: true

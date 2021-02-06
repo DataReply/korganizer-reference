@@ -1,0 +1,59 @@
+resources:
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: {{.Values.sampleApp}}
+    spec:
+      replicas: 3
+      selector:
+        matchLabels:
+          app: {{.Values.sampleApp}}
+      template:
+        metadata:
+          labels:
+            app: {{.Values.sampleApp}}
+        spec:
+          containers:
+            - name: {{.Values.sampleApp}}
+              image: {{.Values.registry}}/paulbouwer/{{.Values.sampleApp}}:1.5
+              ports:
+                - containerPort: 8080
+              resources:
+                requests:
+                  memory: 100Mi
+                  cpu: 100m
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{.Values.sampleApp}}
+    spec:
+      # use ClusterIP with ingress
+      type: ClusterIP
+      ports:
+        # service listens on http (80)
+        - port: 80
+          # sends to a pod on port 8080
+          targetPort: 8080
+      selector:
+        app: {{.Values.sampleApp}}
+
+  - apiVersion: extensions/v1beta1
+    kind: Ingress
+    metadata:
+      name: {{.Values.sampleApp}}
+      annotations:
+        # use nginx-ingress (needed if 2+ ingress controllers)
+        external-dns.alpha.kubernetes.io/hostname: {{.Values.sampleApp}}.{{.Values.externalDomain}}
+    spec:
+      rules:
+        # route by virtualhost - externaldns registers this record
+        - host: {{.Values.sampleApp}}.{{.Values.externalDomain}}
+          http:
+            paths:
+              - backend:
+                  serviceName: {{.Values.sampleApp}}
+                  # connect to service using http port
+                  servicePort: 80
+                # default path put here explicitly for illustrative purposes
+                path: /

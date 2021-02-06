@@ -1,0 +1,18 @@
+artifactoryStore: {{.Values.artifactorySecret}}
+artifactoryCredentials:
+  auths:
+    {{- range $key, $repo := .Values.artifactoryRepositories }}
+    "{{$repo}}":
+      auth: {{ printf "%s:%s" $.Values.artifactoryUser $.Values.artifactoryPassword | b64enc }}
+      email: "user@localhost"
+      password: {{$.Values.artifactoryPassword}}
+      username: {{$.Values.artifactoryUser}}
+    {{- end }}
+
+hostedZone: client.dev.aws.company.com
+ingressDomain: ingress.gw.client.dev.aws.company.com
+externalDomain: "client.dev.aws.company.com"
+cluster: client-{{.Values.envSlug}}
+ingressClassName: {{.Values.defaultIngressClass}}
+
+

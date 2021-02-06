@@ -1,0 +1,48 @@
+resources:
+  - apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: add-taint-to-web-nodes
+    spec:
+      rules:
+        - name: adds-taints-spec
+          match:
+            resources:
+              kinds:
+              - Node
+              selector:
+                matchLabels:
+                  layer: web
+          mutate:
+            patchStrategicMerge:
+              spec:
+                taints:
+                - key: "layer"
+                  value: "web"
+                  effect: "NoSchedule"
+
+
+
+
+
+  - apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: "add-aws-env-variables"
+    spec:
+      rules:
+        - name: "adds AWS regional endpoint vars on pods in infra namespace that have a container named logical-backup."
+          match:
+            resources:
+              kinds:
+                - Pod
+              namespaces:
+                - "infra"
+          mutate:
+            overlay:
+              spec:
+                containers:
+                  - (name): "logical-backup"
+                    env:
+                      - name: AWS_STS_REGIONAL_ENDPOINTS
+                        value: "regional"

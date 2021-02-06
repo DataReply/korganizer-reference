@@ -1,0 +1,9 @@
+istio: false
+envSlug: "dev"
+
+#artifactoryStore: false
+istioSidecarInject: false
+externalDomain: "migration.dev.aws.company.com"
+Caps:
+  KubeVersion:
+    Version: 1.18.0

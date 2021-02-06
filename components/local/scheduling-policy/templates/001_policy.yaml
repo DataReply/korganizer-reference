@@ -1,0 +1,43 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: 'node-affinity-{{ternary "default" .Values.matchedGroupName .Values.matchUnlabeled}}'
+spec:
+  rules:
+    - name: "adds affinity to {{- if .Values.matchUnlabeled -}} unlabeled {{- else -}} worker-group={{.Values.matchedGroupName}} labeled  {{- end -}} apps."
+      match:
+        resources:
+          kinds:
+            - Deployment
+            - StatefulSet
+            - Job
+          selector:
+            {{- if .Values.matchUnlabeled }}
+            matchExpressions:
+              - {key: worker-group, operator: DoesNotExist}
+            {{- else }}
+            matchLabels:
+              worker-group: "{{.Values.matchedGroupName}}"
+            {{- end }}
+      mutate:
+        patchStrategicMerge:
+          spec:
+            template:
+              spec:
+                affinity:
+                  nodeAffinity:
+                    preferredDuringSchedulingIgnoredDuringExecution:
+                      - preference:
+                          matchExpressions:
+                            - key: eks.amazonaws.com/nodegroup
+                              operator: In
+                              values:
+                                - "{{.Values.matchedGroupName}}-worker-group"
+                        weight: {{.Values.primaryGroupWeight}}
+                      - preference:
+                          matchExpressions:
+                            - key: eks.amazonaws.com/nodegroup
+                              operator: In
+                              values:
+                                - "{{.Values.fallbackGroupName}}-worker-group"
+                        weight:  {{.Values.secondaryGroupWeight}}

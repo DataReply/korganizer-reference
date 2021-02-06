@@ -1,0 +1,70 @@
+bases:
+  - ../../_defaults.yaml
+  - ../_namespace.yaml
+  - _app_group.yaml
+
+values:
+  - app: kyverno
+---
+templates:
+{{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
+
+releases:
+  - name: kyverno
+    <<: *base-local
+    chart: kyverno/kyverno
+    version: v1.3.1
+    <<: *classify-tertiary
+
+
+    # see: https://github.com/kyverno/kyverno/issues?q=is%3Aissue+eks+is%3Aclosed
+    strategicMergePatches:
+        - apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: {{ .Values.app }}
+            namespace:  {{ .Values.namespace }}
+          spec:
+            template:
+              spec:
+                dnsPolicy: ClusterFirstWithHostNet
+                hostNetwork: true
+
+
+  - name: kyverno-mutation-policies
+    <<: *base-local
+    installed: true
+    chart: incubator/raw
+    needs: [ {{ .Values.kubeContext }}/{{.Values.namespace}}/kyverno]
+    version: 0.2.3
+
+  - name: kyverno-scheduling-primary-scheduling-policy
+    <<: *base-local
+    chart:  ../../../../components/local/scheduling-policy
+    values:
+      - matchedGroupName: "primary"
+      - fallbackGroupName: "secondary"
+
+  - name: kyverno-scheduling-secondary-scheduling-policy
+    <<: *base-local
+    chart:  ../../../../components/local/scheduling-policy
+    values:
+      - matchedGroupName: "secondary"
+      - fallbackGroupName: "tertiary"
+
+  - name: kyverno-scheduling-tertiary-scheduling-policy
+    <<: *base-local
+    chart:  ../../../../components/local/scheduling-policy
+    values:
+      - matchedGroupName: "tertiary"
+      - fallbackGroupName: "secondary"
+
+  - name: kyverno-scheduling-unlabeled-scheduling-policy
+    <<: *base-local
+    chart:  ../../../../components/local/scheduling-policy
+    values:
+      - matchUnlabeled: true
+      - matchedGroupName: "tertiary"
+      - fallbackGroupName: "secondary"
+      - primaryGroupWeight: 50
+      - secondaryGroupWeight: 50

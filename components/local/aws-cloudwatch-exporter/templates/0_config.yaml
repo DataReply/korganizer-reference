@@ -1,0 +1,106 @@
+ 
+{{- with .Values }}
+  
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.component}}-config
+  namespace: {{.namespace}}
+  labels:
+    release: {{.release}}
+    component:  {{.component}}
+    version: {{.version}}
+data:
+  config.yml: |
+    ---
+    discovery:
+      exportedTagsOnMetrics:
+        ebs:
+        - "kubernetes.io/created-for/pvc/name"
+        - "kubernetes.io/created-for/pv/name"
+        - "kubernetes.io/created-for/pvc/namespace"
+
+      jobs:
+      - type: ebs
+        region: {{.region}}
+        searchTags:
+        - Key: KubernetesCluster
+          Value: {{.kubernetesCluster}}
+        awsDimensions:
+        - VolumeId
+        metrics:
+        - name: BurstBalance
+          statistics:
+          - Minimum
+          period: 600
+          length: 600
+          addCloudwatchTimestamp: false
+        - name: VolumeReadBytes
+          statistics:
+          - Average
+          period: 600
+          length: 600
+          addCloudwatchTimestamp: false
+
+        - name: VolumeReadBytes
+          statistics:
+          - Sum
+          period: 300
+          length: 43200
+          addCloudwatchTimestamp: false
+
+        - name: VolumeWriteBytes
+          statistics:
+          - Average
+          period: 600
+          length: 600
+          addCloudwatchTimestamp: false
+        - name: VolumeWriteBytes
+          statistics:
+          - Sum
+          period: 600
+          length: 600
+          addCloudwatchTimestamp: false
+        - name: VolumeReadOps
+          statistics:
+          - Average
+          period: 600
+          length: 600
+          addCloudwatchTimestamp: false
+
+        - name: VolumeWriteOps
+          statistics:
+          - Average
+          period: 600
+          length: 600
+          addCloudwatchTimestamp: false
+
+        - name: VolumeWriteOps
+          statistics:
+          - Average
+          period: 300
+          length: 43200
+          addCloudwatchTimestamp: false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+{{- end }}
