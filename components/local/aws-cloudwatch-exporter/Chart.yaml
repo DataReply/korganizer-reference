@@ -1,0 +1,7 @@
+apiVersion: v1
+description: exports aws cw metrics to prometheus
+engine: gotpl
+maintainers:
+  - name: twiechert
+name: aws-cloudwatch-exporter
+version: 1.1.2
