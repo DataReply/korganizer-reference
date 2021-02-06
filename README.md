@@ -1,8 +1,14 @@
-## Korgi Chart Organization - Sample Repository
+## Korgi - Configuration Management amd Chart Organization Framework
+
+<p align="center">
+  <img src="https://emojis.slackmojis.com/emojis/images/1488330086/1793/party-corgi.gif?1488330086">
+   </br>
+   Korgi helps you organize your releases and their configurations like a good boi
+</p>
 
 This repository illustrates the chart organization framework used in [Korgi](https://github.com/DataReply/korgi). It is based on [helmfile](https://github.com/roboll/helmfile) and implements the following concepts:
 
-- logical chart organization into namespaces, app groups, apps and releases
+- logical organization into namespaces, app groups, apps and releases
 - multi-layer value organization to support DRY configuration management
 - ability to use templating in release value definitions
 - Support for local plus remote helm charts and arbitrary kubernetes config resources
@@ -66,10 +72,8 @@ Release values can be specified at different levels/layers
 11. release defaults for a specific environment (e.g. defaults for cilium release in dev)
 12. release defaults specified alongside the release in the app file
 
-![value-layering](doc/img/layering.png)
 
-
-The tree view of values specified inside this repository is given by:
+The tree view of values specified inside this reference prohect is given by:
 
 ```
 .
@@ -171,7 +175,15 @@ The tree view of values specified inside this repository is given by:
 
 ### Test this repository
 
-sops updatekeys secrets.yaml
+1. Install korgi and its dependencies:
+
+- [Korgi](https://github.com/DataReply/korgi)
+- [Helm](https://helm.sh/docs/intro/install/)
+- [Helmfile](https://github.com/roboll/helmfile)
+- [kapp](https://github.com/vmware-tanzu/carvel-kapp)
+- [SOPS](https://github.com/mozilla/sops) (optional for secret management)
+- [helm secrets](https://github.com/jkroepke/helm-secrets) (optional for secret management)
+
 
 2. Import the gpg key pair located in `doc/keys`
 ```
