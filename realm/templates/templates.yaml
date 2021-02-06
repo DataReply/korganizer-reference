@@ -7,7 +7,6 @@
     secrets:
       - ../../../values/defaults/secrets.yaml
 
-
       - ../../../values/env/{{`{{ .Environment.Name }}`}}/secrets.yaml
 
       - ../../../values/defaults/{{`{{ .Release.Namespace }}`}}/secrets.yaml
@@ -59,16 +58,16 @@
 
   deletable-annotation-pvc-adder: &deletable-annotation-pvc-adder
     transformers:
-    - apiVersion: builtin
-      kind: AnnotationsTransformer
-      metadata:
-        name: disk-annotation-adder
-      annotations:
-        deletable: "true"
-      fieldSpecs:
-        - path: spec/volumeClaimTemplates/metadata/annotations
-          create: true
-          kind: StatefulSet
+      - apiVersion: builtin
+        kind: AnnotationsTransformer
+        metadata:
+          name: disk-annotation-adder
+        annotations:
+          deletable: "true"
+        fieldSpecs:
+          - path: spec/volumeClaimTemplates/metadata/annotations
+            create: true
+            kind: StatefulSet
 
   ingress-class-pvc-adder: &ingress-class-pvc-adder
     transformers:

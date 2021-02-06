@@ -58,9 +58,7 @@ releases:
 
   - name: ingress-examples
     <<: *base-local
-
     chart: incubator/raw
     version: 0.2.3
-
     needs: [ {{ .Values.kubeContext }}/{{.Values.namespace}}/ingress-nginx]
-    <<: *ingress-class-pvc-adder
+

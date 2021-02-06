@@ -73,9 +73,10 @@ environments:
     values:
       - dnsServer: 172.20.0.10
       - awsAccountId: "94943929492"
-      - kubeContext: "arn:aws:eks:eu-central-1:{{.Values.awsAccountId}}:cluster/migration-dev-ctx"
+      - kubeContext: "arn:aws:eks:eu-central-1:94943929492:cluster/migration-dev-ctx"
       - artifactory: "545454542.dkr.ecr.eu-central-1.amazonaws.com"
       - awsCertResourceId: "76b2361f-f802-4f21-925a-4934343"
+      - awsResourcePrefix: "company-department"
       - clusterName: "{{.Values.awsResourcePrefix}}-eks-dev"
       - DataBucket: "{{.Values.awsResourcePrefix}}-datahub-dev"
       - OutputBucket: "{{.Values.awsResourcePrefix}}-datahub-dev"

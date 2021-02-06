@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://emojis.slackmojis.com/emojis/images/1488330086/1793/party-corgi.gif?1488330086">
    </br>
-   Korganizor helps you organize your releases and their configs like a good boi
+   Korganizer helps you organize your releases and their configs like a good boi
 </p>
 
 This repository illustrates the chart organization framework used in [Korgi](https://github.com/DataReply/korgi). It is based on [helmfile](https://github.com/roboll/helmfile) and implements the following concepts:
@@ -11,14 +11,15 @@ This repository illustrates the chart organization framework used in [Korgi](htt
 - logical organization into namespaces, app groups, apps and releases
 - multi-layer value organization to support DRY configuration management
 - ability to use templating in release value definitions
-- Support for local plus remote helm charts and arbitrary kubernetes config resources
+- supports kustomize-based chart patching
+- supports deploying helm charts and arbitrary kubernetes config resources
 
 ### Entities - Namespaces, App Groups, Apps and Releases
 
-Korgi organizes charts and their respective installations inside `realm/namespaces`. 
+Korganizer organizes charts and their respective installations inside `realm/namespaces`. 
 Namespaces are composed of app groups which in turn contain multiple apps. Apps are represented by app files and reference one or many release definitions.
 A release definition states the helm chart to install, while the installation instruction becomes complete only after the instantiation of environment specific release values that are managed under `realm/values`.
-That being said, Korgi assumes that all these mentioned entities are present across environments and differences between environments will preferrably be configured inside the respective environment value directory.
+That being said, Korganizer assumes that all these mentioned entities are present across environments and differences between environments will preferrably be configured inside the respective environment value directory.
 
 The following diagram illustrates the logical chart organization of a fictitious Kubernetes project.
 
@@ -157,18 +158,4 @@ The tree view of values specified inside this reference project is given by:
 
 ### Test this repository
 
-1. Install korgi and its dependencies:
-
-- [Korgi](https://github.com/DataReply/korgi)
-- [Helm](https://helm.sh/docs/intro/install/)
-- [Helmfile](https://github.com/roboll/helmfile)
-- [kapp](https://github.com/vmware-tanzu/carvel-kapp)
-- [SOPS](https://github.com/mozilla/sops) (optional for secret management)
-- [helm secrets](https://github.com/jkroepke/helm-secrets) (optional for secret management)
-
-
-2. Import the gpg key pair located in `doc/keys`
-```
-gpg --import ./doc/keys/public
-gpg --allow-secret-key-import --import  ./doc/keys/private.key
-```
+Please follow the steps described in the [walkthrough](doc/WALKTHROUGH.md).

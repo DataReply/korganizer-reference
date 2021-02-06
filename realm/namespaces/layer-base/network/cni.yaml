@@ -37,7 +37,7 @@ releases:
             enabled: false
             serviceMonitor:
               enabled: false
-          registry: {{.Values.registry}}/cilium
+          registry: {{.Values.artifactory}}/cilium
           ipam:
             operator:
               clusterPoolIPv4PodCIDR: "12.0.0.0/8"
