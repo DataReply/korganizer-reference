@@ -1,9 +1,9 @@
-## Korgi - Configuration Management amd Chart Organization Framework
+## Korganizer - Configuration Management and Chart Organization Framework
 
 <p align="center">
   <img src="https://emojis.slackmojis.com/emojis/images/1488330086/1793/party-corgi.gif?1488330086">
    </br>
-   Korgi helps you organize your releases and their configs like a good boi
+   Korganizor helps you organize your releases and their configs like a good boi
 </p>
 
 This repository illustrates the chart organization framework used in [Korgi](https://github.com/DataReply/korgi). It is based on [helmfile](https://github.com/roboll/helmfile) and implements the following concepts:
@@ -13,7 +13,7 @@ This repository illustrates the chart organization framework used in [Korgi](htt
 - ability to use templating in release value definitions
 - Support for local plus remote helm charts and arbitrary kubernetes config resources
 
-### Namespaces, App Groups, Apps and Releases
+### Entities - Namespaces, App Groups, Apps and Releases
 
 Korgi organizes charts and their respective installations inside `realm/namespaces`. 
 Namespaces are composed of app groups which in turn contain multiple apps. Apps are represented by app files and reference one or many release definitions.
@@ -22,7 +22,9 @@ That being said, Korgi assumes that all these mentioned entities are present acr
 
 The following diagram illustrates the logical chart organization of a fictitious Kubernetes project.
 
-![app-organization](doc/img/app_organization.png)
+<p align="center">
+  <img src="doc/img/app_organization.png">
+</p>
 
 The organization into namespaces, app groups and apps implemented inside this repository, is illustrated by the following tree view.
 ```
