@@ -11,7 +11,7 @@ templates:
 {{ tpl ( readFile  "./../../../templates/templates.yaml") . }}
 
   .common: &chart
-    chart:  ../../../../components/local/sc
+    chart:  ../../../../charts/local/sc
 
 releases:
   - name: gp3

@@ -40,28 +40,28 @@ releases:
 
   - name: kyverno-scheduling-primary-scheduling-policy
     <<: *base-local
-    chart:  ../../../../components/local/scheduling-policy
+    chart:  ../../../../charts/local/scheduling-policy
     values:
       - matchedGroupName: "primary"
       - fallbackGroupName: "secondary"
 
   - name: kyverno-scheduling-secondary-scheduling-policy
     <<: *base-local
-    chart:  ../../../../components/local/scheduling-policy
+    chart:  ../../../../charts/local/scheduling-policy
     values:
       - matchedGroupName: "secondary"
       - fallbackGroupName: "tertiary"
 
   - name: kyverno-scheduling-tertiary-scheduling-policy
     <<: *base-local
-    chart:  ../../../../components/local/scheduling-policy
+    chart:  ../../../../charts/local/scheduling-policy
     values:
       - matchedGroupName: "tertiary"
       - fallbackGroupName: "secondary"
 
   - name: kyverno-scheduling-unlabeled-scheduling-policy
     <<: *base-local
-    chart:  ../../../../components/local/scheduling-policy
+    chart:  ../../../../charts/local/scheduling-policy
     values:
       - matchUnlabeled: true
       - matchedGroupName: "tertiary"

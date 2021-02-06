@@ -19,7 +19,7 @@ templates:
 releases:
   - name: grafana-ingress
     <<: *base-local
-    chart: ../../../../components/local/ingress-extension
+    chart: ../../../../charts/local/ingress-extension
     values:
       - component: grafana
 

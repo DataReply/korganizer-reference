@@ -26,7 +26,7 @@ releases:
 
   - name: aws-cloudwatch-exporter
     <<: *base-local
-    chart: ../../../../components/local/aws-cloudwatch-exporter
+    chart: ../../../../charts/local/aws-cloudwatch-exporter
     installed: false #{{ eq .Environment.Name .Values.eksProd .Values.eksDev }}
     needs: [ {{ .Values.kubeContext }}/{{.Values.namespace}}/aws-cloudwatch-exporter-sa]
     values:

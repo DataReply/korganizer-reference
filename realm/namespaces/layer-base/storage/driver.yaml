@@ -12,7 +12,7 @@ templates:
 releases:
   - name: ebs-csi
     <<: *base-local
-    chart: ../../../../components/vendor/charts/aws-ebs-csi-driver
+    chart: ../../../../charts/vendor/aws-ebs-csi-driver
     #installed: false
     transformers:
     - apiVersion: builtin

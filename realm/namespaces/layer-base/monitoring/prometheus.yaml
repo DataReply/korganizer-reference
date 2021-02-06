@@ -73,7 +73,7 @@ releases:
   # This chart is supposed to test if prometheus specs are properly picked up by the operator
   - name: prometheus-base
     <<: *base-local
-    chart: ../../../../components/local/prometheus
+    chart: ../../../../charts/local/prometheus
     values:
       - image: quay.artifactory.company.com/prometheus/prometheus
     labels:
