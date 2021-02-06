@@ -1,6 +1,6 @@
 ## Korgi Chart Organization - Sample Repository
 
-This repository illustrates the chart organization framework used in [Korgi](https://github.com/DataReply/korgi). It is based on [helmfile](https://github.com/roboll/helmfile) and implements the following concepts.
+This repository illustrates the chart organization framework used in [Korgi](https://github.com/DataReply/korgi). It is based on [helmfile](https://github.com/roboll/helmfile) and implements the following concepts:
 
 - logical chart organization into namespaces, app groups, apps and releases
 - multi-layer value organization to support DRY configuration management
@@ -10,10 +10,11 @@ This repository illustrates the chart organization framework used in [Korgi](htt
 ### Namespaces, App Groups, Apps and Releases
 
 Korgi organizes charts and their respective installations inside `realm/namespaces`. 
-Namespaces are composed of app groups which in turn contain multiple apps. Apps are repsenseted by app files and reference one or many release definitions.
-A release definition states the helm chart to install, while the installation instruction becomes complete with the instantiation of environment specific release values which managed under `realm/values`.
+Namespaces are composed of app groups which in turn contain multiple apps. Apps are represented by app files and reference one or many release definitions.
+A release definition states the helm chart to install, while the installation instruction becomes complete only after the instantiation of environment specific release values that are managed under `realm/values`.
 That being said, Korgi assumes that all these mentioned entities are present across environments and differences between environments will preferrably be configured inside the respective environment value directory.
 
+The following diagram illustrates the logical chart organization of a fictitious Kubernetes project.
  
 ![app-organization](doc/img/app_organization.png)
 
