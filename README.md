@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://emojis.slackmojis.com/emojis/images/1488330086/1793/party-corgi.gif?1488330086">
    </br>
-   Korgi helps you organize your releases and their configs like a good boi
+   Korganizor helps you organize your releases and their configs like a good boi
 </p>
 
 This repository illustrates the chart organization framework used in [Korgi](https://github.com/DataReply/korgi). It is based on [helmfile](https://github.com/roboll/helmfile) and implements the following concepts:
