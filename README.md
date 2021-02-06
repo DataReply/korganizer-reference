@@ -1,4 +1,4 @@
-## Korganizor - Configuration Management and Chart Organization Framework
+## Korganizer - Configuration Management and Chart Organization Framework
 
 <p align="center">
   <img src="https://emojis.slackmojis.com/emojis/images/1488330086/1793/party-corgi.gif?1488330086">
