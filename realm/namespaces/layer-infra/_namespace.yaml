@@ -1,5 +1,5 @@
 values:
-- namespace: infra
+- namespace: layer-infra
 - app: default
 - resources:
     requests:

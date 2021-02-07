@@ -27,7 +27,7 @@ releases:
   - name: aws-cloudwatch-exporter
     <<: *base-local
     chart: ../../../../charts/local/aws-cloudwatch-exporter
-    installed: false #{{ eq .Environment.Name .Values.eksProd .Values.eksDev }}
+    installed: true
     needs: [ {{ .Values.kubeContext }}/{{.Values.namespace}}/aws-cloudwatch-exporter-sa]
     values:
       - image:  quay-remote.artifactory.company.com/invisionag/yet-another-cloudwatch-exporter:v0.13.7
@@ -35,7 +35,7 @@ releases:
 
   - name: aws-cloudwatch-exporter-sa
     <<: *base-local
-    installed: {{ eq .Environment.Name .Values.eksProd .Values.eksDev }}
+    installed: {{ eq .Environment.Name .Values.eksDev }}
     chart: incubator/raw
     version: 0.2.3
 

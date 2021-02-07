@@ -17,7 +17,7 @@ releases:
     values:
       - nameOverride: "cluster-autoscaler"
       - image:
-          repository: {{.Values.registry}}/autoscaling/cluster-autoscaler
+          repository: {{.Values.artifactory}}/autoscaling/cluster-autoscaler
           tag: v1.18.3
       - cloudProvider: aws
       - awsRegion: {{.Values.awsRegion}}
