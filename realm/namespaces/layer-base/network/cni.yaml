@@ -27,38 +27,4 @@ releases:
       command: "kubectl"
       args: ["-n", "kube-system", "delete", "daemonset",  "aws-node", "--ignore-not-found"]
     {{ end }}
-    values:
-      - hubble-ui:
-          image:
-            # repository of the docker image
-            repository:  quay.artifactory.company.com/cilium/hubble-ui
-      - global:
-          prometheus:
-            enabled: false
-            serviceMonitor:
-              enabled: false
-          registry: {{.Values.artifactory}}/cilium
-          ipam:
-            operator:
-              clusterPoolIPv4PodCIDR: "12.0.0.0/8"
-          egressMasqueradeInterfaces: eth0
-          encryption:
-            # $ kubectl create -n kube-system secret generic cilium-ipsec-keys \
-            #    --from-literal=keys="3 rfc4106(gcm(aes)) $(echo $(dd if=/dev/urandom count=20 bs=1 2> /dev/null| xxd -p -c 64)) 128"
-            #  see https://docs.cilium.io/en/v1.8/gettingstarted/encryption/ for reference
-            #
-            enabled: true
-            nodeEncryption: false
-          #tunnel: disabled
-          nodeinit:
-            enabled: true
-          hubble:
-            enabled: true
 
-            metrics:
-              enabled: [dns,drop,tcp,flow,port-distribution,icmp,http]
-            listenAddress: ":4244"
-            relay:
-              enabled: true
-            ui:
-              enabled: true

@@ -63,18 +63,18 @@ The organization into namespaces, app groups and apps implemented inside this re
 Release values can be specified at different levels/layers 
 
 (higher has precedence)
-1. helm defaults specified alongside the helm chart (values.yaml file)
-2. general defaults across environments
-3. general defaults for a specific environment (e.g. defaults for the dev environment)
-4. general namespace defaults across namespace (e.g. layer-infra both in dev and prod)
-5. namespace default for a specific environment (e.g. layer-infra in prod only)
-6. app group defaults across all environments (e.g. defaults for monitoring group both in dev and prod)
-7. app group defaults for a specific environment (e.g. defaults for monitoring group in dev)
-8. app defaults across all environments (e.g. defaults for prometheus app in both dev and prod)
-9. app defaults for a specific environment (e.g. defaults for prometheus app in prod)
-10. release defaults across all environments (e.g. defaults for cilium release in both dev and prod)
-11. release defaults for a specific environment (e.g. defaults for cilium release in dev)
-12. release defaults specified alongside the release in the app file
+1. helm defaults specified alongside the helm chart (values.yaml file) [example](charts/vendor/aws-ebs-csi-driver/values.yaml)
+2. general defaults across environments [example](realm/values/defaults/values.yaml)
+3. general defaults for a specific environment (e.g. defaults for the dev environment) [example](realm/values/env/client-dev/values.yaml)
+4. general namespace defaults across namespace (e.g. layer-infra both in dev and prod) [example](realm/values/defaults/layer-infra/values.yaml)
+5. namespace default for a specific environment (e.g. layer-infra in prod only) [example](realm/values/env/client-prod/layer-infra/values.yaml)
+6. app group defaults across all environments (e.g. defaults for system group both in dev and prod) [example](realm/values/defaults/layer-base/system/values.gotmpl)
+7. app group defaults for a specific environment (e.g. defaults for monitoring group in dev) [example](realm/values/env/client-dev/layer-infra/monitoring/values.yaml)
+8. app defaults across all environments (e.g. defaults for prometheus app in both dev and prod) [example](realm/values/defaults/layer-infra/monitoring/prometheus/values.gotmpl)
+9. app defaults for a specific environment (e.g. defaults for prometheus app in prod) [example](realm/values/env/client-prod/layer-infra/monitoring/prometheus/values.yaml)
+10. release defaults across all environments (e.g. defaults for cilium release in both dev and prod) [example](realm/values/defaults/layer-base/network/cni/cilium.gotmpl)
+11. release defaults for a specific environment (e.g. defaults for cilium release in dev) [example](realm/values/env/migration-dev/layer-base/network/cni/cilium.gotmpl)
+12. release defaults specified alongside the release in the app file [example](realm/namespaces/layerbase/monitoring/prometheus.yaml)
 
 
 The tree view of values specified inside this reference project is given by:
