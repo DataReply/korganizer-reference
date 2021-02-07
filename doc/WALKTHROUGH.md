@@ -10,6 +10,11 @@
 - [SOPS](https://github.com/mozilla/sops) (optional for secret management)
 - [helm secrets](https://github.com/jkroepke/helm-secrets) (optional for secret management)
 
+Alternatively, you can run the basic functionality inside a Docker container that can be run and tested through: 
+```
+make build
+make shell
+```
 
 2. To template or apply releases that reference secrets, you will need to import the gpg key pair located in `doc/keys`.
 ```
