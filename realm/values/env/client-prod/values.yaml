@@ -13,3 +13,7 @@ dnsTestEntries:
 tcpTestEntries:
   - name: "dwh-prod"
     destination: "109.127.82.99:1526"
+
+httpTestEntries:
+  - name: "youtube"
+    url: "https://youtube.com"

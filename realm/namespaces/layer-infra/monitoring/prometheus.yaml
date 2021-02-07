@@ -33,6 +33,7 @@ templates:
 releases:
   - name: {{.Values.pushGtwName}}
     <<: *base-local
+    chart: prometheus-community/prometheus-pushgateway
     version: 1.4.2
     labels:
       targetNamespace: {{.Values.namespace}}

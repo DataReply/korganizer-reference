@@ -17,9 +17,10 @@ gpg --import ./doc/keys/public
 gpg --allow-secret-key-import --import  ./doc/keys/private.key
 ```
 
-3. Before using korgi to actually deploy releases to a kubernetes cluster, we can use the helmfile binary to test if the template state already works.
+3. Before using korgi to actually deploy releases to a kubernetes cluster, we can use the `--dry-run` option that will template only.
 
 ```
-cd realm/namespaces/layer-base/network
-helmfile  --environment migration-dev  --file cni.yaml  template
+korgi apply-namespace -e migration-dev layer-base --dry-run
+korgi apply-namespace -e client-prod layer-infra --dry-run
+
 ```
