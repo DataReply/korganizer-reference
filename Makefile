@@ -36,7 +36,7 @@ rm:
 	docker rm $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
 
 release: build
-    make push -e VERSION=$(VERSION)
+	make push -e VERSION=$(VERSION)
 
 
 default: build
