@@ -19,7 +19,7 @@ shell:
 	docker run --rm --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) --entrypoint  /bin/bash -i -t $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(IMAGE_NAME):$(VERSION)
 
 test:
-	docker run --rm --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) --entrypoint  bats -i -t $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(IMAGE_NAME):$(VERSION) /korgi-test/
+	docker run --rm --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) --entrypoint  bats $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(IMAGE_NAME):$(VERSION) /korgi-test/
 
 run:
     docker run --rm --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(IMAGE_NAME):$(VERSION)
@@ -36,7 +36,7 @@ rm:
 	docker rm $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
 
 release: build
-    make push -e VERSION=$(VERSION)
+	make push -e VERSION=$(VERSION)
 
 
 default: build

@@ -1,5 +1,8 @@
 ## Korganizer - Configuration Management and Chart Organization Framework
 
+![example workflow name](https://github.com/DataReply/korganizer-reference/workflows/test-on-push/badge.svg)
+
+
 <p align="center">
   <img src="https://emojis.slackmojis.com/emojis/images/1488330086/1793/party-corgi.gif?1488330086">
    </br>

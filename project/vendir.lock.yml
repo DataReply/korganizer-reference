@@ -1,0 +1,11 @@
+apiVersion: vendir.k14s.io/v1alpha1
+directories:
+- contents:
+  - git:
+      commitTitle: 'Merge pull request #644 from wongma7/helm-workflow...'
+      sha: f54138034204850e54c26f67dde3f8217339c09c
+      tags:
+      - v0.8.0
+    path: aws-ebs-csi-driver
+  path: charts/vendor
+kind: LockConfig
