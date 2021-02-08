@@ -1,7 +1,8 @@
+#!/usr/bin/env bats
+
 setup() {
   gpg --import /korgi/keys/public
   gpg --allow-secret-key-import --import  /korgi/keys/private.key
-  echo "imported"
 }
 
 @test "template the layer-infra namespace succeeds" {
