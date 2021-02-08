@@ -16,6 +16,4 @@ jobs:
         with:
           fetch-depth: 1
       - name: Run Makefile
-        env:
-          TOKEN: ${{ secrets.TOKEN }}
         run: make test
