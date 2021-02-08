@@ -1,12 +1,7 @@
 name: test-master
 
-on:
-  push:
-    branches:
-      - master
-      - test
-  schedule:
-    - cron: '20 13 * * *'
+on: [push, pull_request]
+
 
 jobs:
   build:
@@ -16,6 +11,6 @@ jobs:
         with:
           fetch-depth: 1
       - name: Build
-        run: docker build -t datareply/korginazer:latest -f Dockerfile .
+        run: make build
       - name: Test
         run: make test
