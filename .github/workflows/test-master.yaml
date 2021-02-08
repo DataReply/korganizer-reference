@@ -16,6 +16,6 @@ jobs:
         with:
           fetch-depth: 1
       - name: Build
-        run: make build
+        run: docker build -t datareply/korginazer:latest -f Dockerfile .
       - name: Test
         run: make test
