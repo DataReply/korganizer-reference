@@ -1,0 +1,70 @@
+---
+# Source: raw/templates/resources.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: raw
+    chart: raw-0.2.3
+    heritage: Helm
+    release: ingress-examples
+  name: hello-kubernetes
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: hello-kubernetes
+  type: ClusterIP
+---
+# Source: raw/templates/resources.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: raw
+    chart: raw-0.2.3
+    heritage: Helm
+    release: ingress-examples
+  name: hello-kubernetes
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-kubernetes
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes
+    spec:
+      containers:
+      - image: 545454542.dkr.ecr.eu-central-1.amazonaws.com/paulbouwer/hello-kubernetes:1.5
+        name: hello-kubernetes
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+---
+# Source: raw/templates/resources.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: hello-kubernetes.migration.dev.aws.company.com
+  labels:
+    app: raw
+    chart: raw-0.2.3
+    heritage: Helm
+    release: ingress-examples
+  name: hello-kubernetes
+spec:
+  rules:
+  - host: hello-kubernetes.migration.dev.aws.company.com
+    http:
+      paths:
+      - backend:
+          serviceName: hello-kubernetes
+          servicePort: 80
+        path: /
