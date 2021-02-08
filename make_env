@@ -1,2 +1,2 @@
 colon := :
-VOLUMES = -v  $(CURDIR)/project\:/korgi
+VOLUMES = -v  $(CURDIR)/project\:/korgi -v  $(CURDIR)/test\:/korgi-test

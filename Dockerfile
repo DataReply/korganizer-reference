@@ -7,6 +7,8 @@ RUN wget  https://github.com/mozilla/sops/releases/download/v3.5.0/sops-v3.5.0.l
     chmod +x sops-v3.5.0.linux && \
     mv sops-v3.5.0.linux  /usr/local/bin/sops
 
+RUN git clone https://github.com/sstephenson/bats.git
+RUN cd bats && ./install.sh /usr/local
 ## install kapp
 RUN wget  https://github.com/k14s/kapp/releases/download/v0.35.0/kapp-linux-amd64 && \
     chmod +x kapp-linux-amd64  && \

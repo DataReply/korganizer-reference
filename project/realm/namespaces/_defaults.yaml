@@ -11,7 +11,8 @@ repositories:
   #  url: https://artifactory.company.com/hel,
   - name: kyverno
     url:  https://kyverno.github.io/kyverno/
-
+  - name: grafana
+    url:  https://grafana.github.io/helm-charts
   - name: autoscaler
     url: https://kubernetes.github.io/autoscaler
 values:
