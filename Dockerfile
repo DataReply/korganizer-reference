@@ -1,5 +1,6 @@
 FROM dtzar/helm-kubectl:3.5.0
 ARG KUSTOMIZE_VERSION=3.8.2
+ARG YQ_VERSION=3.4.1
 
 WORKDIR /korgi
 ## install SOPS
@@ -36,5 +37,8 @@ RUN tar -zxvf /tmp/kustomize* -C /tmp \
   && rm -rf /tmp/* \
   && chmod 0755 /bin/kustomize
 
+
+RUN wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -O /usr/bin/yq &&\
+    chmod +x /usr/bin/yq
 
 ENTRYPOINT ["/usr/local/bin/korgi"]
